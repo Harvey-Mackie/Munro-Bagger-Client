@@ -5,17 +5,17 @@ import { MunroSummaryDto } from '../../api/models/Munro'
 import { GetMunros } from '../../api/munros'
 import MunroSearchBar from '../SearchBar/MunroSearchBar'
 import Map from './MunroMap'
-import MunroSummaryCard from './MunroSummaryCard'
+import MunroSummaryCard from '../SummaryCard/MunroSummaryCard'
 
 const useStyles = makeStyles(theme => ({
-  parentContainer: { 
-    width: '100vw', 
-    height: '100vh', 
-    display: 'flex' 
+  parentContainer: {
+    width: '100vw',
+    height: '100vh',
+    display: 'flex'
   },
   childContainer: {
-    marginTop: "2vh",
-    marginBottom: "2vh",
+    marginTop: '2vh',
+    marginBottom: '2vh',
     width: '100vw',
     height: '96vh',
     display: 'flex',
@@ -37,7 +37,7 @@ const MunroMap: FC = () => {
   })
 
   async function initMunros () {
-    const munroCollection = await GetMunros() 
+    const munroCollection = await GetMunros()
     setMunros(munroCollection.content)
   }
 
@@ -51,8 +51,15 @@ const MunroMap: FC = () => {
 
   return (
     <div className={styles.parentContainer}>
-      <Map munros={munros} onClick={setSelectedMunro} />
+      <Map
+        munros={munros}
+        onClick={setSelectedMunro}
+        selectedMunro={selectedMunro}
+      />
       <div className={styles.childContainer}>
+        {munros && (
+          <MunroSearchBar munros={munros} onClick={setSelectedMunro} />
+        )}
         {selectedMunro && <MunroSummaryCard selectedMunro={selectedMunro} />}
       </div>
     </div>
