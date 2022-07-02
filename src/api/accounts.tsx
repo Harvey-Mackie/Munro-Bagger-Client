@@ -2,6 +2,7 @@ import { buildApiUrl } from './common/buildUrl'
 import { httpClient } from './common'
 import { LoginResponse } from './models/Account'
 import { AppResponse } from './common/types'
+import { errorToast } from './common/toast'
 
 export async function Login (
   email: string,
@@ -12,6 +13,10 @@ export async function Login (
     email,
     password
   })) as AppResponse<LoginResponse>
+
+  if (!response.content) {
+    errorToast(response.message)
+  }
 
   return response
 }
