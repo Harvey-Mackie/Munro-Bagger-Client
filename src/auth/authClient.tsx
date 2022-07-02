@@ -2,15 +2,14 @@ import { Login } from '../api/accounts'
 import { LoginResponse } from '../api/models/Account'
 
 const createAuthClient = () => {
-    
   const login = async (
     email: string,
     password: string
   ): Promise<LoginResponse> => {
     const response = await Login(email, password)
 
-    if(!response.content){
-        throw new Error("Invalid login attempt")
+    if (!response.content) {
+      throw new Error('Invalid login attempt')
     }
 
     localStorage.setItem(
@@ -25,12 +24,25 @@ const createAuthClient = () => {
     localStorage.removeItem('mb-account-information')
   }
 
+  const getAccessToken = () => {
+    const accountString = localStorage.getItem('mb-account-information')
+
+    if (!accountString) {
+      return undefined
+    }
+
+    const account = JSON.parse(accountString) as LoginResponse
+
+    return account.accessToken
+  }
+
   return {
     login,
-    logout
-  };
+    logout,
+    getAccessToken
+  }
 }
 
-const authClient = createAuthClient();
+const authClient = createAuthClient()
 
-export default authClient;
+export default authClient

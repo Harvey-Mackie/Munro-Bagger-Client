@@ -1,4 +1,4 @@
-import { FunctionComponent } from 'react'
+import { FunctionComponent, useState } from 'react'
 import authClient from './authClient'
 import { AuthContext } from './AuthContext'
 
@@ -7,19 +7,28 @@ interface AuthProviderProps {
 }
 
 const AuthProvider: FunctionComponent<AuthProviderProps> = ({ children }) => {
+  const [isLoggedIn, setIsLoggedIn] = useState<boolean>(
+    authClient.getAccessToken() != undefined
+  )
+
   const handleLogin = async (email: string, password: string) => {
-    return await authClient.login(email, password)
+    const response = await authClient.login(email, password)
+    setIsLoggedIn(true)
+
+    return response
   }
 
   const handleLogout = async () => {
     authClient.logout()
+    setIsLoggedIn(false)
   }
 
   return (
     <AuthContext.Provider
       value={{
         login: handleLogin,
-        logout: handleLogout
+        logout: handleLogout,
+        isLoggedIn
       }}
     >
       {children}
